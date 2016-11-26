@@ -6,7 +6,7 @@ print("           _ _              ___  ______ \n" +
       " _ __ ___  _| |_ _ __ ___ / /_\ \| |_/ /\n" +
       "| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/ \n" +
       "| | | | | | | |_| | | | | | | | || |    \n" +
-      "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 1.0\n" +
+      "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 1.1\n" +
       "                            by @xdavidhu\n")
 
 update = input("[?] Install/Update dependencies? Y/n: ")
@@ -161,7 +161,7 @@ else:
             time.sleep(5)
         except:
             print("")
-        os.system("sudo mitmproxy -T -f -w mitmap-proxy.mitmproxy")
+        os.system("sudo mitmproxy -T --follow -w mitmap-proxy.mitmproxy")
     else:
         print("[I] Skipping...")
         if wireshark_if == "y" or wireshark_if == "":
