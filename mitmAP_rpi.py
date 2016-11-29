@@ -148,7 +148,7 @@ else:
         if proxy_config == "n" or proxy_config == "":
             os.system("sudo iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080")
         else:
-            print("[I] To install the certificate, go to 'http://mitm.it/' trough the proxy, and choose your OS.")
+            print("[I] To install the certificate, go to 'http://mitm.it/' through the proxy, and choose your OS.")
             os.system("sudo iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080")
             os.system("sudo iptables -t nat -A PREROUTING -p tcp --destination-port 443 -j REDIRECT --to-port 8080")
         os.system("sudo sysctl -w net.ipv4.ip_forward=1 > /dev/null 2>&1")
