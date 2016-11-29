@@ -191,6 +191,8 @@ print("[I] Deleting old '/etc/dnsmasq.hosts' file...")
 os.system("sudo rm /etc/dnsmasq.hosts > /dev/null 2>&1")
 print("[I] Removeing speed limit from " + ap_iface + "...")
 os.system("sudo wondershaper clear " + ap_iface + " > /dev/null 2>&1")
+print("[I] Flushing iptables rules...")
+os.system("sudo iptables --flush")
 if proxy_if == "y" or proxy_if == "":
     if wireshark_if == "y" or wireshark_if == "":
         print(
