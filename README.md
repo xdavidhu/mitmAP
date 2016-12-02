@@ -30,4 +30,4 @@
   <h3>Important: At the first run, choose 'y' on installing dependencies and on creating the config files!</h3>
 
 # disclaimer:
-  I'm not responsible for anything you did with this program, so please only use it for good and educational purposes.
+  I'm not responsible for anything you do with this program, so please only use it for good and educational purposes.
