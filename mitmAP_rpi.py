@@ -196,7 +196,7 @@ if sslstrip_if == "y" or sslstrip_if == "":
     if tshark_if == "y" or tshark_if == "":
         print("[I] Starting TSHARK...")
         os.system("sudo screen -S mitmap-tshark -m -d tshark -i " + ap_iface + " -w " + script_path + "logs/mitmap-tshark.pcap")
-    print("\nTAIL started on mitmap-sslstrip.log... Wait for output... (press 'CTRL + C' to stop)\n")
+    print("\nTAIL started on " + script_path + "logs/mitmap-sslstrip.log... Wait for output... (press 'CTRL + C' to stop)\nOnly POST requests will be shown.\n")
     try:
         time.sleep(5)
     except:
