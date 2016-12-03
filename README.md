@@ -33,7 +33,7 @@
 # starting:
   * Kali Linux -> "sudo python3 mitmAP.py"<br>
   * Raspberry PI -> "sudo python3 mitmAP_rpi.py"<br>
-  <h3>Important: At the first run, choose 'y' on installing dependencies and on creating the config files!</h3>
+<h3>Important: At the first run, choose 'y' on installing dependencies and on creating the config files!</h3>
 
 # disclaimer:
   I'm not responsible for anything you do with this program, so please only use it for good and educational purposes.
