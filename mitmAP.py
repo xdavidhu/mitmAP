@@ -317,13 +317,11 @@ os.system("sudo iptables --delete-chain")
 os.system("sudo iptables --table nat --delete-chain")
 if proxy_if == "y" or proxy_if == "":
     if wireshark_if == "y" or wireshark_if == "":
-        print(
-            "[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-proxy.mitmproxy' and to file '"+ script_path + "logs/mitmap-wireshark.pcap'. View the '.mitmap' file later by 'mitmproxy -r [file]'.")
+        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-proxy.mitmproxy' and to file '"+ script_path + "logs/mitmap-wireshark.pcap'. View the '.mitmap' file later by 'mitmproxy -r [file]'.")
     if tshark_if == "y" or tshark_if == "":
-            "[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-proxy.mitmproxy' and to file '"+ script_path + "logs/mitmap-tshark.pcap'. View the '.mitmap' file later by 'mitmproxy -r [file]'.")
+        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-proxy.mitmproxy' and to file '"+ script_path + "logs/mitmap-tshark.pcap'. View the '.mitmap' file later by 'mitmproxy -r [file]'.")
     else:
-        print(
-            "[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-proxy.mitmproxy'. View it later by 'mitmproxy -r [file]'.")
+        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-proxy.mitmproxy'. View it later by 'mitmproxy -r [file]'.")
 if sslstrip_if == "y" or sslstrip_if == "":
     if wireshark_if == "y" or wireshark_if == "":
         print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-sslstrip.log' and to file '"+ script_path + "logs/mitmap-wireshark.pcap'.")
