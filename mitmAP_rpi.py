@@ -266,7 +266,7 @@ else:
             time.sleep(5)
         except:
             print("")
-        os.system("sudo mitmproxy -T --follow -w " + script_path + "logs/mitmap-proxy.mitmproxy")
+        os.system("sudo mitmproxy -T -w " + script_path + "logs/mitmap-proxy.mitmproxy")
         #STARTING POINT
     else:
         print("[I] Skipping...")
