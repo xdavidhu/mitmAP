@@ -5,7 +5,7 @@
     | | | | | | | |_| | | | | | | | || |    
     |_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.0
   
-<h3> A python program, to create a fake AP, and sniff data.</h3>
+<h3> A python program to create a fake AP and sniff data.</h3>
 
 # new in 2.0:
   * SSLstrip2 for HSTS bypass<br>
