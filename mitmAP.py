@@ -299,7 +299,10 @@ if driftnet_if == "y" or driftnet_if == "":
 if tshark_if == "y" or tshark_if == "":
     os.system("sudo screen -S mitmap-tshark -X stuff '^C\n'")
 print("[I] Restoring old NetworkManager.cfg")
-os.system("sudo mv /etc/NetworkManager/NetworkManager.conf.backup /etc/NetworkManager/NetworkManager.conf")
+if os.path.isfile("/etc/NetworkManager/NetworkManager.conf.backup"):
+	os.system("sudo mv /etc/NetworkManager/NetworkManager.conf.backup /etc/NetworkManager/NetworkManager.conf")
+else:
+	os.system("sudo rm /etc/NetworkManager/NetworkManager.conf")
 print("[I] Restarting NetworkManager...")
 os.system("sudo service network-manager restart")
 print("[I] Stopping DNSMASQ server...")
