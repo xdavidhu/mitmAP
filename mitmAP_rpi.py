@@ -138,6 +138,7 @@ else:
 #WIRESHARK & TSHARK QUESTION
 wireshark_if = input("[?] Start WIRESHARK on " + ap_iface + "? (ONLY WORKS WITH GUI) y/N: ")
 wireshark_if = wireshark_if.lower()
+tshark_if = "n"
 if wireshark_if != "y":
     tshark_if = input("[?] Capture packets to .pcap with TSHARK? (no gui needed) Y/n: ")
     tshark_if = tshark_if.lower()
