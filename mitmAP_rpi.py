@@ -322,24 +322,6 @@ os.system("sudo iptables --flush")
 os.system("sudo iptables --flush -t nat")
 os.system("sudo iptables --delete-chain")
 os.system("sudo iptables --table nat --delete-chain")
-if proxy_if == "y" or proxy_if == "":
-    if wireshark_if == "y":
-        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-proxy.mitmproxy' and to file '"+ script_path + "logs/mitmap-wireshark.pcap'. View the '.mitmap' file later by 'mitmproxy -r [file]'.")
-    if tshark_if == "y" or tshark_if == "":
-        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-proxy.mitmproxy' and to file '"+ script_path + "logs/mitmap-tshark.pcap'. View the '.mitmap' file later by 'mitmproxy -r [file]'.")
-    else:
-        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-proxy.mitmproxy'. View it later by 'mitmproxy -r [file]'.")
-if sslstrip_if == "y" or sslstrip_if == "":
-    if wireshark_if == "y":
-        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-sslstrip.log' and to file '"+ script_path + "logs/mitmap-wireshark.pcap'.")
-    if tshark_if == "y" or tshark_if == "":
-        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-sslstrip.log' and to file '"+ script_path + "logs/mitmap-tshark.pcap'.")
-    else:
-        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-sslstrip.log'.")
-if sslstrip_if != "y" or sslstrip_if != "" or proxy_if != "y" or proxy_if != "":
-    if tshark_if == "y" or tshark_if == "":
-        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-tshark.pcap'.")
-    if wireshark_if == "y":
-        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-wireshark.pcap'.")
+print("[I] Traffic have been saved to the 'log' folder!")
 print("\n[!] WARNING: If you want to use the AP interface normally, please reboot the PI!\n")
 print("[I] mitmAP stopped.")
