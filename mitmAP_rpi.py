@@ -336,7 +336,7 @@ if sslstrip_if == "y" or sslstrip_if == "":
         print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-sslstrip.log' and to file '"+ script_path + "logs/mitmap-tshark.pcap'.")
     else:
         print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-sslstrip.log'.")
-if sslstrip_if != "y" or sslstrip_if != "" ot proxy_if != "y" or proxy_if != "":
+if sslstrip_if != "y" or sslstrip_if != "" or proxy_if != "y" or proxy_if != "":
     if tshark_if == "y" or tshark_if == "":
         print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-tshark.pcap'.")
     if wireshark_if == "y":
