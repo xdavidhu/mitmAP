@@ -336,9 +336,10 @@ if sslstrip_if == "y" or sslstrip_if == "":
         print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-sslstrip.log' and to file '"+ script_path + "logs/mitmap-tshark.pcap'.")
     else:
         print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-sslstrip.log'.")
-if tshark_if == "y" or tshark_if == "":
-    print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-tshark.pcap'.")
-if wireshark_if == "y":
-    print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-wireshark.pcap'.")
+if sslstrip_if != "y" or sslstrip_if != "" ot proxy_if != "y" or proxy_if != "":
+    if tshark_if == "y" or tshark_if == "":
+        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-tshark.pcap'.")
+    if wireshark_if == "y":
+        print("[I] Traffic have been saved to the file '"+ script_path + "logs/mitmap-wireshark.pcap'.")
 print("\n[!] WARNING: If you want to use the AP interface normally, please reboot the PI!\n")
 print("[I] mitmAP stopped.")
