@@ -198,7 +198,7 @@ if sslstrip_if == "y" or sslstrip_if == "":
         print("")
     while True:
         try:
-            print("[I] Restarting tail in 1 sec...")
+            print("[I] Restarting tail in 1 sec... (press 'CTRL + C' again to stop)")
             time.sleep(1)
             os.system("sudo tail -f " + script_path + "logs/mitmap-sslstrip.log | grep -e 'Sending Request: POST' -e 'New host:' -e 'Sending header: cookie' -e 'POST Data'")
         except KeyboardInterrupt:
