@@ -67,7 +67,7 @@ class ServerConnection(HTTPClient):
         self.endHeaders()
 
     def sendPostData(self):
-        logging.warning(self.getPostPrefix() + " Data (" + self.headers['host'] + "):\n" + str(self.postData))
+        logging.warning(self.getPostPrefix() + " Data (" + self.headers['host'] + "): " + str(self.postData))
         self.transport.write(self.postData)
 
     def connectionMade(self):
