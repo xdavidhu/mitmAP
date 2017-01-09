@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#encoding: utf-8
 import os
 import time
 
@@ -81,13 +83,13 @@ if hostapd_config == "y" or hostapd_config == "":
     hostapd_wpa = hostapd_wpa.lower()
     if hostapd_wpa == "y":
         wpa_passphrase = input("[?] Please enter the WPA2 passphrase for the AP: ")
-        hostapd_file_wpa = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP"
+        hostapd_file_wpa = "utf8_ssid=1\ninterface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP"
         print("[I] Deleting old config file...")
         os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
         print("[I] Writing config file...")
         os.system("sudo echo -e '" + hostapd_file_wpa + "' > /etc/hostapd/hostapd.conf")
     else:
-        hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0"
+        hostapd_file = "utf8_ssid=1\ninterface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0"
         print("[I] Deleting old config file...")
         os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
         print("[I] Writing config file...")
