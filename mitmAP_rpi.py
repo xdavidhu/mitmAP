@@ -85,7 +85,13 @@ if hostapd_config == "y" or hostapd_config == "":
     hostapd_wpa = input("[?] Enable WPA2 encryption? y/N: ")
     hostapd_wpa = hostapd_wpa.lower()
     if hostapd_wpa == "y":
-        wpa_passphrase = input("[?] Please enter the WPA2 passphrase for the AP: ")
+        canBreak = False
+        while not canBreak:
+            wpa_passphrase = input("[?] Please enter the WPA2 passphrase for the AP: ")
+            if len(wpa_passphrase) < 8:
+                print("[!] Please enter minimum 8 characters for the WPA2 passphrase.")
+            else:
+                canBreak = True
         hostapd_file_wpa = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP"
         print("[I] Deleting old config file...")
         os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
