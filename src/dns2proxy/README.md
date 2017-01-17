@@ -1,3 +1,6 @@
+THIS IS JUST A COPY THE OFFICAL DNS2PROXY REPOSITORY
+========
+
 dns2proxy  
 =========  
   
