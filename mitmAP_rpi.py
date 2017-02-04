@@ -1,7 +1,7 @@
 import os
 import time
 
-// SET UTF-8
+# SET UTF-8
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
