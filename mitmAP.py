@@ -39,12 +39,20 @@ network_manager_cfg = "[main]\nplugins=keyfile\n\n[keyfile]\nunmanaged-devices=i
 ap_iface_default = ap_iface
 
 #AIRBASE QUESTION
-airbase_if = input("[?] Use AIRBASE-NG and respond to all probe requests? (monitor mode support needed) Y/n: ")
-airbase_if = airbase_if.lower()
-if airbase_if == "y" or airbase_if == "":
-    use_airbase = True
-else:
+canBreak = False
+print("\n[Q] Please choose an AP tool to use:\n\t[1] HOSTAPD - Fast speed and stable\n\t[2] AIRBASE - Responds to every probe request but SLOW internet speeds!\n\n\tFor beginners [1] is recommended.\n")
+while canBreak:
+    airbaseQuestion = input("> ")
+    if airbaseQuestion == "1" or airbaseQuestion == "2":
+        canBreak = True
+        print()
+    else:
+        print("[!] Please choose 1 or 2.")
+
+if airbaseQuestion == "1":
     use_airbase = False
+else:
+    use_airbase = True
 #/AIRBASE QUESTION
 
 #SSLSTRIP QUESTION
@@ -66,10 +74,12 @@ if use_airbase:
     print("[I] Starting AIRBASE-NG on " + ap_iface + "mon...")
     if sslstrip_if == "n" and proxy_if == "n":
         basic_mode = True
+        os.system("sudo screen -S mitmap-airbase -m -d airbase-ng -P " + ap_iface + "mon")
     else:
         basic_mode = False
         os.system("sudo screen -S mitmap-airbase -m -d airbase-ng -P " + ap_iface + "mon")
     ap_iface = "at0"
+
 
 print("[I] Backing up NetworkManager.cfg...")
 os.system("sudo cp /etc/NetworkManager/NetworkManager.conf /etc/NetworkManager/NetworkManager.conf.backup")
@@ -327,17 +337,32 @@ else:
         if not use_airbase:
             os.system("sudo hostapd /etc/hostapd/hostapd.conf")
         else:
-            os.system("airbase-ng -P " + ap_iface_default + "mon")
+            print("AP started. Press 'CTRL + C' to stop...")
+            while True:
+                try:
+                    input()
+                except KeyboardInterrupt:
+                    print("\n")
+                    break
         #STARTING POINT
 
 #STOPPING
 print("")
 print("[!] Stopping...")
+if basic_mode and use_airbase:
+    print("[I] Stopping AIRBASE...")
+    os.system("sudo screen -S mitmap-airbase -X stuff '^C\n'")
+    print("[I] Stopping monitor mode on " + ap_iface_default + "...")
+    os.system("sudo airmon-ng stop " + ap_iface_default + "mon")
 if proxy_if == "y" or proxy_if == "" or sslstrip_if == "y" or sslstrip_if == "":
     if not use_airbase:
+        print("[I] Stopping HOSTAPD...")
         os.system("sudo screen -S mitmap-hostapd -X stuff '^C\n'")
     else:
+        print("[I] Stopping AIRBASE...")
         os.system("sudo screen -S mitmap-airbase -X stuff '^C\n'")
+        print("[I] Stopping monitor mode on " + ap_iface_default + "...")
+        os.system("sudo airmon-ng stop " + ap_iface_default + "mon")
     if sslstrip_if == "y" or sslstrip_if == "":
         os.system("sudo screen -S mitmap-sslstrip -X stuff '^C\n'")
         os.system("sudo screen -S mitmap-dns2proxy -X stuff '^C\n'")
