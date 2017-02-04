@@ -1,10 +1,7 @@
+# coding=utf-8
+
 import os
 import time
-
-# SET UTF-8
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 print("           _ _              ___  ______ \n" +
       "          (_) |            / _ \ | ___ \\\n" +
