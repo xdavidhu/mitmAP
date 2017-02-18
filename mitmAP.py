@@ -60,7 +60,7 @@ network_manager_cfg = "[main]\nplugins=keyfile\n\n[keyfile]\nunmanaged-devices=i
 print("[I] Backing up NetworkManager.cfg...")
 os.system("sudo cp /etc/NetworkManager/NetworkManager.conf /etc/NetworkManager/NetworkManager.conf.backup")
 print("[I] Editing NetworkManager.cfg...")
-#write_file("/etc/NetworkManager/NetworkManager.conf", network_manager_cfg )
+write_file("/etc/NetworkManager/NetworkManager.conf", network_manager_cfg )
 print("[I] Restarting NetworkManager...")
 os.system("sudo service network-manager restart")
 os.system("sudo ifconfig " + ap_iface + " up")
