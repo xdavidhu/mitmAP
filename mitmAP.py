@@ -2,6 +2,7 @@
 
 import os
 import time
+import subprocess
 
 print("           _ _              ___  ______ \n" +
       "          (_) |            / _ \ | ___ \\\n" +
@@ -10,6 +11,26 @@ print("           _ _              ___  ______ \n" +
       "| | | | | | | |_| | | | | | | | || |    \n" +
       "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.1\n" +
       "             by David Schutz (@xdavidhu)\n")
+
+sudo = "/usr/bin/sudo"
+tee = "/usr/bin/tee"
+
+def _run_cmd_write(cmd_args, s):
+    # write a file using sudo 
+    p = subprocess.Popen(cmd_args,
+                         stdin=subprocess.PIPE, 
+                         stdout=subprocess.DEVNULL, 
+                         shell=False, universal_newlines=True)
+    p.stdin.write(s)
+    p.stdin.close()
+    p.wait()
+
+def write_file(path, s):
+    _run_cmd_write((sudo, tee, path), s)
+
+def append_file(path, s):
+    # append to the file, don't overwrite
+    _run_cmd_write((sudo, tee, "-a", path), s)
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 script_path = script_path + "/"
@@ -35,11 +56,11 @@ if update == "y" or update == "":
 
 ap_iface = input("[?] Please enter the name of your wireless interface (for the AP): ")
 net_iface = input("[?] Please enter the name of your internet connected interface: ")
-network_manager_cfg = "[main]\nplugins=keyfile\n\n[keyfile]\nunmanaged-devices=interface-name:" + ap_iface
+network_manager_cfg = "[main]\nplugins=keyfile\n\n[keyfile]\nunmanaged-devices=interface-name:" + ap_iface + "\n"
 print("[I] Backing up NetworkManager.cfg...")
 os.system("sudo cp /etc/NetworkManager/NetworkManager.conf /etc/NetworkManager/NetworkManager.conf.backup")
 print("[I] Editing NetworkManager.cfg...")
-os.system("sudo echo -e '" + network_manager_cfg + "' > /etc/NetworkManager/NetworkManager.conf")
+write_file("/etc/NetworkManager/NetworkManager.conf", network_manager_cfg )
 print("[I] Restarting NetworkManager...")
 os.system("sudo service network-manager restart")
 os.system("sudo ifconfig " + ap_iface + " up")
@@ -59,13 +80,13 @@ print("[I] Backing up /etc/dnsmasq.conf...")
 os.system("sudo cp /etc/dnsmasq.conf /etc/dnsmasq.conf.backup")
 print("[I] Creating new /etc/dnsmasq.conf...")
 if sslstrip_if == "y" or sslstrip_if == "":
-    dnsmasq_file = "port=0\n# disables dnsmasq reading any other files like /etc/resolv.conf for nameservers\nno-resolv\n# Interface to bind to\ninterface=" + ap_iface + "\n#Specify starting_range,end_range,lease_time\ndhcp-range=10.0.0.3,10.0.0.20,12h\ndhcp-option=3,10.0.0.1\ndhcp-option=6,10.0.0.1"
+    dnsmasq_file = "port=0\n# disables dnsmasq reading any other files like /etc/resolv.conf for nameservers\nno-resolv\n# Interface to bind to\ninterface=" + ap_iface + "\n#Specify starting_range,end_range,lease_time\ndhcp-range=10.0.0.3,10.0.0.20,12h\ndhcp-option=3,10.0.0.1\ndhcp-option=6,10.0.0.1\n"
 else:
-    dnsmasq_file = "# disables dnsmasq reading any other files like /etc/resolv.conf for nameservers\nno-resolv\n# Interface to bind to\ninterface=" + ap_iface + "\n#Specify starting_range,end_range,lease_time\ndhcp-range=10.0.0.3,10.0.0.20,12h\n# dns addresses to send to the clients\nserver=8.8.8.8\nserver=10.0.0.1"
+    dnsmasq_file = "# disables dnsmasq reading any other files like /etc/resolv.conf for nameservers\nno-resolv\n# Interface to bind to\ninterface=" + ap_iface + "\n#Specify starting_range,end_range,lease_time\ndhcp-range=10.0.0.3,10.0.0.20,12h\n# dns addresses to send to the clients\nserver=8.8.8.8\nserver=10.0.0.1\n"
 print("[I] Deleting old config file...")
 os.system("sudo rm /etc/dnsmasq.conf > /dev/null 2>&1")
 print("[I] Writing config file...")
-os.system("sudo echo -e '" + dnsmasq_file + "' > /etc/dnsmasq.conf")
+write_file("/etc/dnsmasq.conf", dnsmasq_file)
 #/DNSMASQ CONFIG
 
 #HOSTAPD CONFIG
@@ -89,17 +110,13 @@ if hostapd_config == "y" or hostapd_config == "":
                 print("[!] Please enter minimum 8 characters for the WPA2 passphrase.")
             else:
                 canBreak = True
-        hostapd_file_wpa = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP"
-        print("[I] Deleting old config file...")
-        os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
-        print("[I] Writing config file...")
-        os.system("sudo echo -e '" + hostapd_file_wpa + "' > /etc/hostapd/hostapd.conf")
+        hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\n"
     else:
-        hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0"
-        print("[I] Deleting old config file...")
-        os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
-        print("[I] Writing config file...")
-        os.system("sudo echo -e '" + hostapd_file + "' > /etc/hostapd/hostapd.conf")
+        hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\n"
+    print("[I] Deleting old config file...")
+    os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
+    print("[I] Writing config file...")
+    write_file("/etc/hostapd/hostapd.conf", hostapd_file)
 else:
     print("[I] Skipping..")
 #/HOSTAPD CONFIG
@@ -234,8 +251,8 @@ else:
             dns_domain = input("[?] " + str(dns_num_temp) + ". domain to spoof (no need for 'www.'): ")
             dns_ip = input("[?] Fake IP for domain '" + dns_domain + "': ")
             dns_domain = dns_domain.replace("www.", "")
-            dns_line = "address=/" + dns_domain + "/" + dns_ip
-            os.system("sudo echo -e '" + dns_line + "' >> /etc/dnsmasq.conf")
+            dns_line = "address=/" + dns_domain + "/" + dns_ip + "\n"
+            append_file("/etc/dnsmasq.conf", dns_line)
             i = i + 1
     else:
         print("[I] Skipping..")
@@ -314,9 +331,9 @@ if tshark_if == "y" or tshark_if == "":
     os.system("sudo screen -S mitmap-tshark -X stuff '^C\n'")
 print("[I] Restoring old NetworkManager.cfg")
 if os.path.isfile("/etc/NetworkManager/NetworkManager.conf.backup"):
-	os.system("sudo mv /etc/NetworkManager/NetworkManager.conf.backup /etc/NetworkManager/NetworkManager.conf")
+    os.system("sudo mv /etc/NetworkManager/NetworkManager.conf.backup /etc/NetworkManager/NetworkManager.conf")
 else:
-	os.system("sudo rm /etc/NetworkManager/NetworkManager.conf")
+    os.system("sudo rm /etc/NetworkManager/NetworkManager.conf")
 print("[I] Restarting NetworkManager...")
 os.system("sudo service network-manager restart")
 print("[I] Stopping DNSMASQ server...")
@@ -335,3 +352,4 @@ os.system("sudo iptables --delete-chain")
 os.system("sudo iptables --table nat --delete-chain")
 print("[I] Traffic have been saved to the 'log' folder!")
 print("[I] mitmAP stopped.")
+# vim: ts=4:sts=4:et
