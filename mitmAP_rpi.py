@@ -78,12 +78,23 @@ hostapd_config = input("[?] Create new HOSTAPD config file at '/etc/hostapd/host
 hostapd_config = hostapd_config.lower()
 if hostapd_config == "y" or hostapd_config == "":
     ssid = input("[?] Please enter the SSID for the AP: ")
+    channel = input("[?] Please enter the channel for the AP: ")
     while True:
-        channel = input("[?] Please enter the channel for the AP: ")
-        if channel.isdigit():
-            break
+		if channel.isdigit():
+	        break
+	    else:
+	        print("[!] Please enter a channel number.")
+    while True:
+        hostapd_band = input("[?] Please choose 802.11 Band (0 - 2.4GHz, 1 - 5GHz):")
+        if hostapd_band not in ("0","1"):
+            print("[!] Please enter a number.")
+            continue
+        elif hostapd_band:
+            hostapd_band = "a"
+            break;
         else:
-            print("[!] Please enter a channel number.")
+            hostapd_band = "g"
+            break;
     hostapd_wpa = input("[?] Enable WPA2 encryption? y/N: ")
     hostapd_wpa = hostapd_wpa.lower()
     if hostapd_wpa == "y":
@@ -94,13 +105,13 @@ if hostapd_config == "y" or hostapd_config == "":
                 print("[!] Please enter minimum 8 characters for the WPA2 passphrase.")
             else:
                 canBreak = True
-        hostapd_file_wpa = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP"
+        hostapd_file_wpa = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode="+hostapd_band+"\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP"
         print("[I] Deleting old config file...")
         os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
         print("[I] Writing config file...")
         os.system("sudo echo -e '" + hostapd_file_wpa + "' > /etc/hostapd/hostapd.conf")
     else:
-        hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0"
+        hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode="+hostapd_band+"\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0"
         print("[I] Deleting old config file...")
         os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
         print("[I] Writing config file...")
@@ -339,3 +350,4 @@ os.system("sudo iptables --table nat --delete-chain")
 print("[I] Traffic have been saved to the 'log' folder!")
 print("\n[!] WARNING: If you want to use the AP interface normally, please reboot the PI!\n")
 print("[I] mitmAP stopped.")
+
