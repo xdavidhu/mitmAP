@@ -1,10 +1,10 @@
-               _ _              ___  ______ 
+               _ _              ___  ______
               (_) |            / _ \ | ___ \
      _ __ ___  _| |_ _ __ ___ / /_\ \| |_/ /
-    | '_ ` _ \| | __| '_ ` _ \|  _  ||  __/ 
+    | '_ ` _ \| | __| '_ ` _ \|  _  ||  __/
     | | | | | | | |_| | | | | | | | || |    
-    |_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.1
-  
+    |_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2
+
 <h3> A python program to create a fake AP and sniff data.</h3>
 
 # new in 2.0:
@@ -29,7 +29,7 @@
 
 # downloading:
   <h3>"git clone https://github.com/xdavidhu/mitmAP"</h3>
-  
+
 # starting:
   * Kali Linux -> "sudo python3 mitmAP.py"<br>
   * Raspberry PI -> "sudo python3 mitmAP_rpi.py"<br>
