@@ -31,9 +31,9 @@ try:
         os.system("sudo apt-get install wondershaper -y")
         os.system("sudo apt-get install driftnet -y")
         os.system("sudo apt-get install python-pcapy -y")
-        os.system("sudo apt-get install python3-pip -y")
-        os.system("sudo python3 -m pip install dnspython")
-        os.system("sudo python3 -m pip install pcapy")
+        os.system("sudo apt-get install python-pip -y")
+        os.system("sudo python -m pip install dnspython")
+        os.system("sudo python -m pip install pcapy")
     #/UPDATING
 
     ap_iface = input("[?] Please enter the name of your wireless interface (for the AP): ")
