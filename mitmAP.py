@@ -10,7 +10,7 @@ print("           _ _              ___  ______ \n" +
       "| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/ \n" +
       "| | | | | | | |_| | | | | | | | || |    \n" +
       "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2\n" +
-      "             by David Schutz (@xdavidhu)\n")
+      "             by David Schütz (@xdavidhu)\n")
 
 sudo = "/usr/bin/sudo"
 tee = "/usr/bin/tee"

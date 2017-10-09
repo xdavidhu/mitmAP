@@ -9,7 +9,7 @@ print("           _ _              ___  ______ \n" +
       "| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/ \n" +
       "| | | | | | | |_| | | | | | | | || |    \n" +
       "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2\n" +
-      "4RaspberryPI by David Schutz (@xdavidhu)\n")
+      "4RaspberryPI by David Schütz (@xdavidhu)\n")
 
 try:
     script_path = os.path.dirname(os.path.realpath(__file__))
