@@ -54,6 +54,7 @@ try:
         os.system("sudo apt-get install python-pip -y")
         os.system("sudo apt-get install libpcap-dev -y")
         os.system("sudo python -m pip install dnspython")
+        os.system("sudo python -m pip install mitmproxy")
         os.system("sudo python -m pip install pcapy")
         os.system("sudo python -m pip install twisted")
     #/UPDATING
