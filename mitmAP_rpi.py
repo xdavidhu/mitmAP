@@ -3,13 +3,19 @@
 import os
 import time
 
-print("           _ _              ___  ______ \n" +
-      "          (_) |            / _ \ | ___ \\\n" +
-      " _ __ ___  _| |_ _ __ ___ / /_\ \| |_/ /\n" +
-      "| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/ \n" +
-      "| | | | | | | |_| | | | | | | | || |    \n" +
-      "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2\n" +
-      "4RaspberryPI by David Schütz (@xdavidhu)\n")
+header = """
+           _ _              ___  ______
+          (_) |            / _ \ | ___ \\
+ _ __ ___  _| |_ _ __ ___ / /_\ \| |_/ /
+| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/
+| | | | | | | |_| | | | | | | | || |
+|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2
+"""
+
+try:
+    print(header + "4RaspberryPI by David Schütz (@xdavidhu)\n")
+except:
+    print(header + "               4RaspberryPI by @xdavidhu\n")
 
 try:
     script_path = os.path.dirname(os.path.realpath(__file__))

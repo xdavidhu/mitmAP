@@ -4,13 +4,19 @@ import os
 import time
 import subprocess
 
-print("           _ _              ___  ______ \n" +
-      "          (_) |            / _ \ | ___ \\\n" +
-      " _ __ ___  _| |_ _ __ ___ / /_\ \| |_/ /\n" +
-      "| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/ \n" +
-      "| | | | | | | |_| | | | | | | | || |    \n" +
-      "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2\n" +
-      "             by David Schütz (@xdavidhu)\n")
+header = """
+           _ _              ___  ______
+          (_) |            / _ \ | ___ \\
+ _ __ ___  _| |_ _ __ ___ / /_\ \| |_/ /
+| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/
+| | | | | | | |_| | | | | | | | || |
+|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2
+"""
+
+try:
+    print(header + "             by David Schütz (@xdavidhu)\n")
+except:
+    print(header + "                            by @xdavidhu\n")
 
 sudo = "/usr/bin/sudo"
 tee = "/usr/bin/tee"
