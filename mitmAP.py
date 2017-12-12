@@ -351,8 +351,9 @@ try:
     os.system("sudo mv /etc/dnsmasq.conf.backup /etc/dnsmasq.conf > /dev/null 2>&1")
     print("[I] Deleting old '/etc/dnsmasq.hosts' file...")
     os.system("sudo rm /etc/dnsmasq.hosts > /dev/null 2>&1")
-    print("[I] Restoring old hostapd...")
-    os.system("sudo mv  /etc/hostapd/hostapd.conf.backup /etc/hostapd/hostapd.conf")
+    if os.path.isfile("/etc/hostapd/hostapd.conf.backup"):
+        print("[I] Restoring old hostapd...")
+        os.system("sudo mv  /etc/hostapd/hostapd.conf.backup /etc/hostapd/hostapd.conf")
     print("[I] Removeing speed limit from " + ap_iface + "...")
     os.system("sudo wondershaper clear " + ap_iface + " > /dev/null 2>&1")
     print("[I] Flushing iptables rules...")
@@ -404,8 +405,9 @@ except KeyboardInterrupt:
     os.system("sudo mv /etc/dnsmasq.conf.backup /etc/dnsmasq.conf > /dev/null 2>&1")
     print("[I] Deleting old '/etc/dnsmasq.hosts' file...")
     os.system("sudo rm /etc/dnsmasq.hosts > /dev/null 2>&1")
-    print("[I] Restoring old hostapd...")
-    os.system("sudo mv  /etc/hostapd/hostapd.conf.backup /etc/hostapd/hostapd.conf")
+    if os.path.isfile("/etc/hostapd/hostapd.conf.backup"):
+        print("[I] Restoring old hostapd...")
+        os.system("sudo mv  /etc/hostapd/hostapd.conf.backup /etc/hostapd/hostapd.conf")
     try:
         print("[I] Removeing speed limit from " + ap_iface + "...")
         os.system("sudo wondershaper clear " + ap_iface + " > /dev/null 2>&1")
