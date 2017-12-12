@@ -86,7 +86,7 @@ try:
 
     #HOSTAPD CONFIG
     print("[I] Backing up hostapd.conf...")
-        os.system("sudo cp /etc/hostapd/hostapd.conf /etc/hostapd/hostapd.conf.backup")
+    os.system("sudo cp /etc/hostapd/hostapd.conf /etc/hostapd/hostapd.conf.backup")
     ssid = input("[?] Please enter the SSID for the AP: ")
     while True:
         channel = input("[?] Please enter the channel for the AP: ")
