@@ -4,19 +4,13 @@ import os
 import time
 import subprocess
 
-header = """
-           _ _              ___  ______
-          (_) |            / _ \ | ___ \\
- _ __ ___  _| |_ _ __ ___ / /_\ \| |_/ /
-| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/
-| | | | | | | |_| | | | | | | | || |
-|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2
-"""
-
-try:
-    print(header + "             by David Schütz (@xdavidhu)\n")
-except:
-    print(header + "                            by @xdavidhu\n")
+print("           _ _              ___  ______ \n" +
+      "          (_) |            / _ \ | ___ \\\n" +
+      " _ __ ___  _| |_ _ __ ___ / /_\ \| |_/ /\n" +
+      "| '_ ` _ \| | __| '_ ` _ \|  _  ||  __/ \n" +
+      "| | | | | | | |_| | | | | | | | || |    \n" +
+      "|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2\n" +
+      "             by David Schuetz (@xdavidhu)\n")
 
 sudo = "/usr/bin/sudo"
 tee = "/usr/bin/tee"
@@ -101,30 +95,37 @@ try:
     #/DNSMASQ CONFIG
 
     #HOSTAPD CONFIG
-    ssid = input("[?] Please enter the SSID for the AP: ")
-    while True:
-        channel = input("[?] Please enter the channel for the AP: ")
-        if channel.isdigit():
-            break
-        else:
-            print("[!] Please enter a channel number.")
-    hostapd_wpa = input("[?] Enable WPA2 encryption? y/N: ")
-    hostapd_wpa = hostapd_wpa.lower()
-    if hostapd_wpa == "y":
-        canBreak = False
-        while not canBreak:
-            wpa_passphrase = input("[?] Please enter the WPA2 passphrase for the AP: ")
-            if len(wpa_passphrase) < 8:
-                print("[!] Please enter minimum 8 characters for the WPA2 passphrase.")
+    hostapd_config = input("[?] Create new HOSTAPD config file at '/etc/hostapd/hostapd.conf' Y/n: ")
+    hostapd_config = hostapd_config.lower()
+    if hostapd_config == "y" or hostapd_config == "":
+        print("[I] Backing up hostapd.conf...")
+        os.system("sudo cp /etc/hostapd/hostapd.conf /etc/hostapd/hostapd.conf.backup")
+        ssid = input("[?] Please enter the SSID for the AP: ")
+        while True:
+            channel = input("[?] Please enter the channel for the AP: ")
+            if channel.isdigit():
+                break
             else:
-                canBreak = True
-        hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\n"
+                print("[!] Please enter a channel number.")
+        hostapd_wpa = input("[?] Enable WPA2 encryption? y/N: ")
+        hostapd_wpa = hostapd_wpa.lower()
+        if hostapd_wpa == "y":
+            canBreak = False
+            while not canBreak:
+                wpa_passphrase = input("[?] Please enter the WPA2 passphrase for the AP: ")
+                if len(wpa_passphrase) < 8:
+                    print("[!] Please enter minimum 8 characters for the WPA2 passphrase.")
+                else:
+                    canBreak = True
+            hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=" + wpa_passphrase + "\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\n"
+        else:
+            hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\n"
+        print("[I] Deleting old config file...")
+        os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
+        print("[I] Writing config file...")
+        write_file("/etc/hostapd/hostapd.conf", hostapd_file)
     else:
-        hostapd_file = "interface=" + ap_iface + "\ndriver=nl80211\nssid=" + ssid + "\nhw_mode=g\nchannel=" + channel + "\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\n"
-    print("[I] Deleting old config file...")
-    os.system("sudo rm /etc/hostapd/hostapd.conf > /dev/null 2>&1")
-    print("[I] Writing config file...")
-    write_file("/etc/hostapd/hostapd.conf", hostapd_file)
+        print("[I] Skipping..")
     #/HOSTAPD CONFIG
 
     #IPTABLES
@@ -329,6 +330,9 @@ try:
             if ssl_dns_if == "y":
                 print("[I] Restoring old " + script_path + "src/dns2proxy/spoof.cfg...")
                 os.system("sudo mv " + script_path + "src/dns2proxy/spoof.cfg.backup  " + script_path + "src/dns2proxy/spoof.cfg")
+    if hostapd_config == "y" or  hostapd_config == "":
+        print("[I] Restoring old hostapd...")
+        os.system("sudo mv  /etc/hostapd/hostapd.conf.backup /etc/hostapd/hostapd.conf")
     if wireshark_if == "y" or wireshark_if == "":
         os.system("sudo screen -S mitmap-wireshark -X stuff '^C\n'")
     if driftnet_if == "y" or driftnet_if == "":
@@ -391,6 +395,9 @@ except KeyboardInterrupt:
         os.system("sudo mv /etc/NetworkManager/NetworkManager.conf.backup /etc/NetworkManager/NetworkManager.conf > /dev/null 2>&1")
     else:
         os.system("sudo rm /etc/NetworkManager/NetworkManager.conf > /dev/null 2>&1")
+    print("[I] Restoring old hostapd.conf")
+    if os.path.isfile("/etc/hostapd/hostapd.conf.backup"):
+        os.system("sudo mv  /etc/hostapd/hostapd.conf.backup /etc/hostapd/hostapd.conf")
     print("[I] Restarting NetworkManager...")
     os.system("sudo service network-manager restart")
     print("[I] Stopping DNSMASQ server...")
@@ -411,3 +418,4 @@ except KeyboardInterrupt:
     os.system("sudo iptables --delete-chain")
     os.system("sudo iptables --table nat --delete-chain")
     print("[I] mitmAP stopped.")
+
