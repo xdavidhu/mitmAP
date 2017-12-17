@@ -189,9 +189,8 @@ try:
             i = 0
             while int(ssl_dns_num) != i:
                 ssl_dns_num_temp = i + 1
-                ssl_dns_domain = input("[?] " + str(ssl_dns_num_temp) + ". domain to spoof (no need for 'www.'): ")
+                ssl_dns_domain = input("[?] " + str(ssl_dns_num_temp) + ". domain to spoof: ")
                 ssl_dns_ip = input("[?] Fake IP for domain '" + ssl_dns_domain + "': ")
-                ssl_dns_domain = ssl_dns_domain.replace("www.", "")
                 ssl_dns_line = ssl_dns_domain + " " + ssl_dns_ip + "\n"
                 os.system("sudo echo -e '" + ssl_dns_line + "' >> "+ script_path + "src/dns2proxy/spoof.cfg")
                 i = i + 1
@@ -255,9 +254,8 @@ try:
             i = 0
             while int(dns_num) != i:
                 dns_num_temp = i + 1
-                dns_domain = input("[?] " + str(dns_num_temp) + ". domain to spoof (no need for 'www.'): ")
+                dns_domain = input("[?] " + str(dns_num_temp) + ". domain to spoof: ")
                 dns_ip = input("[?] Fake IP for domain '" + dns_domain + "': ")
-                dns_domain = dns_domain.replace("www.", "")
                 dns_line = "address=/" + dns_domain + "/" + dns_ip + "\n"
                 append_file("/etc/dnsmasq.conf", dns_line)
                 i = i + 1
