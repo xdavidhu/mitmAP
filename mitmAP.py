@@ -1,8 +1,10 @@
+#!/usr/bin/python3
 # coding=utf-8
 
 import os
 import time
 import subprocess
+from pathlib import Path
 
 header = """
            _ _              ___  ______
@@ -10,7 +12,7 @@ header = """
  _ __ ___  _| |_ _ __ ___ / /_\ \| |_/ /
 | '_ ` _ \| | __| '_ ` _ \|  _  ||  __/
 | | | | | | | |_| | | | | | | | || |
-|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2
+|_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.3
 """
 
 try:
@@ -20,6 +22,7 @@ except:
 
 sudo = "/usr/bin/sudo"
 tee = "/usr/bin/tee"
+apt = Path("/usr/bin/apt")  # Preformance Tweaks By @DarrenRainey
 
 def _run_cmd_write(cmd_args, s):
     # write a file using sudo
@@ -49,17 +52,15 @@ try:
     update = update.lower()
     if update == "y" or update == "":
         print("[I] Checking/Installing dependencies, please wait...")
-        os.system("sudo apt-get update")
-        os.system("sudo apt-get install dnsmasq -y")
-        os.system("sudo apt-get install wireshark -y")
-        os.system("sudo apt-get install hostapd -y")
-        os.system("sudo apt-get install screen -y")
-        os.system("sudo apt-get install wondershaper -y")
-        os.system("sudo apt-get install driftnet -y")
-        os.system("sudo apt-get install python-pip -y")
-        os.system("sudo apt-get install python3-pip -y")
-        os.system("sudo apt-get install python3-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg62-turbo-dev zlib1g-dev -y")
-        os.system("sudo apt-get install libpcap-dev -y")
+           if apt.is_file():
+                      print("APT Found Using Instead Of APT-GET") # Use APT when possiable for nicer UI and speed increase
+                      os.system("apt update")
+                      os.system("apt install dnsmasq wireshark hostapd screen wondershaper driftnet python-pip python3-pip python3-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg62-turbo-dev zlib1g-dev libpcap-dev -y")
+           else:
+                      print("APT Not Found - Falling Back To APT-GET)
+                      os.system("apt-get update")
+                      os.system("apt-get install dnsmasq wireshark hostapd screen wondershaper driftnet python-pip python3-pip python3-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg62-turbo-dev zlib1g-dev libpcap-dev -y")
+                            
         os.system("sudo python3 -m pip install mitmproxy")
         os.system("sudo python -m pip install dnspython")
         os.system("sudo python -m pip install pcapy")
