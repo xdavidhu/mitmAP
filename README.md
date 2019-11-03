@@ -5,6 +5,8 @@
     | | | | | | | |_| | | | | | | | || |    
     |_| |_| |_|_|\__|_| |_| |_\_| |_/\_| 2.2
 
+### ⚠️ Warning! This project is no longer maintained and may not work as excepted.
+
 <h3> A python program to create a fake AP and sniff data.</h3>
 
 # new in 2.0:
