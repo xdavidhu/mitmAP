@@ -86,6 +86,8 @@ try:
     #/DNSMASQ CONFIG
 
     #HOSTAPD CONFIG
+    print("[I] Backing up hostapd.conf...")
+    os.system("sudo cp /etc/hostapd/hostapd.conf /etc/hostapd/hostapd.conf.backup")
     ssid = input("[?] Please enter the SSID for the AP: ")
     while True:
         channel = input("[?] Please enter the channel for the AP: ")
@@ -323,6 +325,9 @@ try:
         os.system("sudo screen -S mitmap-driftnet -X stuff '^C\n'")
     if tshark_if == "y" or tshark_if == "":
         os.system("sudo screen -S mitmap-tshark -X stuff '^C\n'")
+    if os.path.isfile("/etc/hostapd/hostapd.conf.backup"):
+        print("[I] Restoring old hostapd...")
+        os.system("sudo mv  /etc/hostapd/hostapd.conf.backup /etc/hostapd/hostapd.conf")
     # print("[I] Restoring old NetworkManager.cfg")
     # os.system("sudo mv /etc/NetworkManager/NetworkManager.conf.backup /etc/NetworkManager/NetworkManager.conf")
     # print("[I] Restarting NetworkManager...")
@@ -389,6 +394,9 @@ except KeyboardInterrupt:
         os.system("sudo wondershaper clear " + ap_iface + " > /dev/null 2>&1")
     except:
         pass
+    if os.path.isfile("/etc/hostapd/hostapd.conf.backup"):
+        print("[I] Restoring old hostapd...")
+        os.system("sudo mv  /etc/hostapd/hostapd.conf.backup /etc/hostapd/hostapd.conf")
     print("[I] Flushing iptables rules...")
     os.system("sudo iptables --flush")
     os.system("sudo iptables --flush -t nat")
